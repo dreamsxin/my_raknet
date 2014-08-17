@@ -1,0 +1,27 @@
+How to perform RakNet customization.
+
+1) first customization
+$ git clone https://github.com/OculusVR/RakNet.git RakNet
+
+Now makes your tweaks and then commit into your local directory.
+
+Then push the changes into your remote (github) directory.
+$ git remote add my_raknet https://github.com/consultit/my_raknet.git
+$ git push -u my_raknet master
+
+2) further customizations
+
+$ git clone https://github.com/consultit/my_raknet.git
+$ cd my_raknet
+$ git remote add raknet https://github.com/OculusVR/RakNet.git
+
+From now on you can fetch/merge (or pull) from raknet, commit to local and 
+then push to origin:
+
+$ git fetch raknet
+$ git merge raknet/master
+$ git commit
+$ git push -u origin master
+
+In Eclipse, if needed, import the existing project (uncheck the "copy project in 
+workspace"). 
