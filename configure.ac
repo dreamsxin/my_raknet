@@ -24,7 +24,6 @@ LT_INIT([dlopen])
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([Source/DS_QueueLinkedList.h])
-AC_CONFIG_HEADERS([config.h])
 AC_PREFIX_DEFAULT([/usr])
 #AM_SILENT_RULES
 
@@ -51,8 +50,17 @@ AC_ARG_ENABLE([rn-debug],
 		[@<:@=yes@:>@ enable raknet debug mode (disabled by default)]),
     [rn_debug=${enableval}], [rn_debug=no])
 if test "x${rn_debug}" != xno; then
-    AC_DEFINE([RN_DEBUG],[1],[debug mode enabled])
+    AC_DEFINE([RN_DEBUG],[1],[Define to 1 for debug mode enabled])
     RN_CXXFLAGS="-O0 -g3 -Wall -fmessage-length=0"
+fi
+# libcat security
+AC_ARG_WITH([libcat],
+	AS_HELP_STRING([--with-libcat],
+		[@<:@=yes@:>@ build raknet with libcat security (without by default)]),
+    [libcat_security=${withval}], [libcat_security=no])
+AM_CONDITIONAL([RN_LIBCATSECURITY], [test "x${libcat_security}" != xno])
+if test "x${libcat_security}" != xno; then
+    AC_DEFINE([LIBCAT_SECURITY],[1],[Define to 1 to have raknet with libcat security])
 fi
 
 AC_SUBST(RN_CPPFLAGS)
@@ -63,7 +71,7 @@ AX_PTHREAD([],[
 	AC_MSG_ERROR([
 	----------------------------------------
 	The  POSIX threads library is
-	required to build RakNet. Stopping...
+	required to build raknet. Stopping...
 	Check 'config.log' for more information.
 	----------------------------------------])
 ])

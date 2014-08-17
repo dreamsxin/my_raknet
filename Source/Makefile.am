@@ -1,6 +1,11 @@
+if !RN_LIBCATSECURITY
 AM_CPPFLAGS = $(RN_CPPFLAGS)
+else
+AM_CPPFLAGS = $(RN_CPPFLAGS) -I$(top_srcdir)/DependentExtensions
+endif
 AM_CXXFLAGS = $(RN_CXXFLAGS)
 AM_LDFLAGS = -version-info 0:0:0
+
 
 #libRakNet.la: distributable shared library
 pkglib_LTLIBRARIES = libRakNet.la
