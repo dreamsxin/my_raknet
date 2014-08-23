@@ -6,9 +6,18 @@ endif
 AM_CXXFLAGS = $(RN_CXXFLAGS)
 AM_LDFLAGS = -version-info 0:0:0
 
+#convenience libraries
+if !RN_LIBCATSECURITY
+libcat =
+else
+libcat = $(top_builddir)/DependentExtensions/cat/libcat.a
+endif
+convenience_libraries = $(libcat)
 
 #libRakNet.la: distributable shared library
 pkglib_LTLIBRARIES = libRakNet.la
+
+libRakNet_la_LIBADD = $(convenience_libraries)
 
 libRakNet_la_SOURCES = \
 	Base64Encoder.cpp \
@@ -122,7 +131,7 @@ libRakNet_la_SOURCES = \
 	VitaIncludes.cpp \
 	WSAStartupSingleton.cpp
 
-include_HEADERS = \
+pkginclude_HEADERS = \
 	AutopatcherPatchContext.h \
 	AutopatcherRepositoryInterface.h \
 	Base64Encoder.h \

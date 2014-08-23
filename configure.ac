@@ -102,6 +102,8 @@ AC_CHECK_FUNCS([atexit gethostbyname gethostname gettimeofday inet_ntoa memmove 
 AC_CONFIG_FILES([
 		Makefile
 		Source/Makefile
+		DependentExtensions/Makefile
+		DependentExtensions/cat/Makefile
 		])
 
 AC_OUTPUT

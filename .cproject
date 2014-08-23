@@ -21,7 +21,7 @@
 					<folderInfo id="org.eclipse.linuxtools.cdt.autotools.core.configuration.build.320799962.2086583007." name="/" resourcePath="">
 						<toolChain id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.660388519" name="GNU Autotools Toolchain" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolChain">
 							<targetPlatform id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.targetPlatform.2051233616" isAbstract="false" name="GNU Autotools Target Platform" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.targetPlatform"/>
-							<builder buildPath="${workspace_loc:/RakNet}/build-Debug" id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.builder.177503124" keepEnvironmentInBuildfile="false" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.builder"/>
+							<builder buildPath="${ProjDirPath}/build-Debug" id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.builder.177503124" keepEnvironmentInBuildfile="false" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.builder"/>
 							<tool id="org.eclipse.linuxtools.cdt.autotools.core.gnu.toolchain.tool.configure.1613325449" name="configure" superClass="org.eclipse.linuxtools.cdt.autotools.core.gnu.toolchain.tool.configure">
 								<option id="org.eclipse.linuxtools.cdt.autotools.core.option.configure.name.1684306931" name="Name" superClass="org.eclipse.linuxtools.cdt.autotools.core.option.configure.name" value="org.eclipse.linuxtools.cdt.autotools.core.configuration.build.320799962.2086583007" valueType="string"/>
 							</tool>
@@ -58,7 +58,7 @@
 					<folderInfo id="org.eclipse.linuxtools.cdt.autotools.core.configuration.build.320799962.2086583007.377299555." name="/" resourcePath="">
 						<toolChain id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.1411145524" name="GNU Autotools Toolchain" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolChain">
 							<targetPlatform id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.targetPlatform.90777327" isAbstract="false" name="GNU Autotools Target Platform" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.targetPlatform"/>
-							<builder buildPath="${workspace_loc:/RakNet}/build-Debug_libcat" id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.builder.1983708105" keepEnvironmentInBuildfile="false" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.builder"/>
+							<builder buildPath="${ProjDirPath}/build-Debug_libcat" id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.builder.1983708105" keepEnvironmentInBuildfile="false" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.builder"/>
 							<tool id="org.eclipse.linuxtools.cdt.autotools.core.gnu.toolchain.tool.configure.1023142581" name="configure" superClass="org.eclipse.linuxtools.cdt.autotools.core.gnu.toolchain.tool.configure">
 								<option id="org.eclipse.linuxtools.cdt.autotools.core.option.configure.name.1488544168" name="Name" superClass="org.eclipse.linuxtools.cdt.autotools.core.option.configure.name" value="org.eclipse.linuxtools.cdt.autotools.core.configuration.build.320799962.2086583007.377299555" valueType="string"/>
 							</tool>
@@ -67,7 +67,7 @@
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1835949292" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gpp.1012555583" name="GCC C++ Compiler" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gpp">
-								<option id="gnu.cpp.compiler.option.preprocessor.def.786002037" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
+								<option id="gnu.cpp.compiler.option.preprocessor.def.786002037" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="LIBCAT_SECURITY=1"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1099458268" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
@@ -87,13 +87,13 @@
 		<configuration configurationName="Devel_Debug_libcat">
 			<resource resourceType="PROJECT" workspacePath="/RakNet"/>
 		</configuration>
-		<configuration configurationName="Debug">
+		<configuration configurationName="Devel_Debug">
 			<resource resourceType="PROJECT" workspacePath="/RakNet"/>
 		</configuration>
 		<configuration configurationName="Debug_libcat">
 			<resource resourceType="PROJECT" workspacePath="/RakNet"/>
 		</configuration>
-		<configuration configurationName="Devel_Debug">
+		<configuration configurationName="Debug">
 			<resource resourceType="PROJECT" workspacePath="/RakNet"/>
 		</configuration>
 	</storageModule>
