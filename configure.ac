@@ -1,6 +1,5 @@
 #                                               -*- Autoconf -*-
 # Process this file with auto(re)conf to produce a configure script.
-
 ###Standard `configure.ac' Layout###
 # Autoconf requirements
 # `AC_INIT(PACKAGE, VERSION, BUG-REPORT-ADDRESS)'
@@ -17,41 +16,36 @@
 # `AC_OUTPUT'
 
 AC_PREREQ([2.69])
-AC_INIT([raknet], [1.0], [consultit@katamail.com])
+AC_INIT([raknet], [1.0], [rakkar@jenkinssoftware.com])
+:${CXXFLAGS=""}
 AM_INIT_AUTOMAKE
 LT_PREREQ([2.2])
 LT_INIT([dlopen])
 
-AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([Source/DS_QueueLinkedList.h])
+#AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_MACRO_DIR([m4])
 AC_PREFIX_DEFAULT([/usr])
-#AM_SILENT_RULES
+AM_SILENT_RULES
 
 #
 RN_CPPFLAGS=""
 # checks for programs.
-:${CXXFLAGS=""}
 AC_PROG_CXX
 AC_PROG_CC
 AC_LANG([C++])
 # default RN CXXFLAGS (release mode)
 RN_CXXFLAGS="-O3 -w -fmessage-length=0"
-
+buildtype=Release
 # checks/sets options
-# RN_DEVEL
-AC_ARG_ENABLE([rn-devel],
-	AS_HELP_STRING([--enable-rn-devel],
-		[@<:@=yes@:>@ enable raknet development mode (disabled by default)]),
-    [rn_devel=${enableval}], [rn_devel=no])
-AM_CONDITIONAL([RN_DEVEL], [test "x${rn_devel}" != xno])
 # RN_DEBUG
-AC_ARG_ENABLE([rn-debug],
-	AS_HELP_STRING([--enable-rn-debug],
-		[@<:@=yes@:>@ enable raknet debug mode (disabled by default)]),
-    [rn_debug=${enableval}], [rn_debug=no])
-if test "x${rn_debug}" != xno; then
-    AC_DEFINE([RN_DEBUG],[1],[Define to 1 for debug mode enabled])
+AC_ARG_ENABLE([debug],
+	AS_HELP_STRING([--enable-debug],
+		[@<:@=yes@:>@ enable Raknet debug mode (disabled by default)]),
+    [debug=${enableval}], [debug=no])
+if test "x${debug}" != xno; then
     RN_CXXFLAGS="-O0 -g3 -Wall -fmessage-length=0"
+    buildtype=Debug
 fi
 # libcat security
 AC_ARG_WITH([libcat],
@@ -60,21 +54,14 @@ AC_ARG_WITH([libcat],
     [libcat_security=${withval}], [libcat_security=no])
 AM_CONDITIONAL([RN_LIBCATSECURITY], [test "x${libcat_security}" != xno])
 if test "x${libcat_security}" != xno; then
-    AC_DEFINE([LIBCAT_SECURITY],[1],[Define to 1 to have raknet with libcat security])
+    AC_DEFINE([LIBCAT_SECURITY],[1],[Define to 1 to have Raknet with libcat security])
 fi
 
 AC_SUBST(RN_CPPFLAGS)
 AC_SUBST(RN_CXXFLAGS)
 
 # checks for libraries.
-AX_PTHREAD([],[
-	AC_MSG_ERROR([
-	----------------------------------------
-	The  POSIX threads library is
-	required to build raknet. Stopping...
-	Check 'config.log' for more information.
-	----------------------------------------])
-])
+AX_PTHREAD
 
 # Checks for header files.
 AC_FUNC_ALLOCA
@@ -107,3 +94,17 @@ AC_CONFIG_FILES([
 		])
 
 AC_OUTPUT
+
+echo
+echo \
+"-----------------------------------------------------
+Raknet version ${PACKAGE_VERSION}
+
+Now type 'make @<:@<target>@:>@'
+where the optional <target> is:
+	all -->for building all binaries
+	install -->for installing everything
+
+Options:
+- build mode: ${buildtype}
+-----------------------------------------------------"
