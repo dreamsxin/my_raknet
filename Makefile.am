@@ -1,6 +1,12 @@
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = DependentExtensions Source
+if BUILD_SAMPLES
+samplesdir = Samples
+else
+samplesdir =
+endif 
+
+SUBDIRS = DependentExtensions Source $(samplesdir)
 
 #Help docs
 helppkg = Help-$(PACKAGE_VERSION).tar.gz

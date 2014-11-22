@@ -47,15 +47,23 @@ if test "x${debug}" != xno; then
     RN_CXXFLAGS="-O0 -g3 -Wall -fmessage-length=0"
     buildtype=Debug
 fi
-# libcat security
+#----------------------------------------------------------------------------
+# Package configuration switches.
+#----------------------------------------------------------------------------
+AC_ARG_ENABLE([samples],
+    [AS_HELP_STRING([--disable-samples],
+            [disable build samples (default YES)])],
+    [build_samples=no],
+    [build_samples=yes])
+AM_CONDITIONAL([BUILD_SAMPLES],[test "x$build_samples" == xyes])
+
 AC_ARG_WITH([libcat],
-	AS_HELP_STRING([--with-libcat],
-		[@<:@=yes@:>@ build raknet with libcat security (without by default)]),
-    [libcat_security=${withval}], [libcat_security=no])
-AM_CONDITIONAL([RN_LIBCATSECURITY], [test "x${libcat_security}" != xno])
-if test "x${libcat_security}" != xno; then
-    AC_DEFINE([LIBCAT_SECURITY],[1],[Define to 1 to have Raknet with libcat security])
-fi
+	[AS_HELP_STRING([--with-libcat],
+		[@<:@=yes@:>@ with libcat security (default NO)])],
+    [libcat_security=yes
+    AC_DEFINE([LIBCAT_SECURITY],[1])],
+    [libcat_security=no])
+AM_CONDITIONAL([RN_LIBCATSECURITY], [test "x${libcat_security}" == xyes])
 
 AC_SUBST(RN_CPPFLAGS)
 AC_SUBST(RN_CXXFLAGS)
@@ -91,6 +99,7 @@ AC_CONFIG_FILES([
 		Source/Makefile
 		DependentExtensions/Makefile
 		DependentExtensions/cat/Makefile
+		Samples/Makefile
 		])
 
 AC_OUTPUT
@@ -106,5 +115,7 @@ where the optional <target> is:
 	install -->for installing everything
 
 Options:
-- build mode: ${buildtype}
+-build mode: ${buildtype}
+-build samples: ${build_samples}
+-with libcat security: ${libcat_security}
 -----------------------------------------------------"
