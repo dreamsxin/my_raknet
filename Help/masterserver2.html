@@ -1,0 +1,405 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- saved from url=(0032)http://masterserver2.raknet.com/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <title>RakNet Master Server 2</title>
+    
+  <style type="text/css"></style></head>
+
+  <body>
+    <h1>RakNet Master Server 2</h1>
+    
+    MasterServer2 provides a mechanism for game clients to find other game clients on the internet, using a highly scalable solution designed to support millions of simultaneous users. Conceptually, MasterServer2 contains one or more tables, where each table represents a game, and each client-uploaded row represents a game instance. Clients upload and downloads row(s) encoded with the JSON data format, using the HTTP protocol through a RESTful interface. Queries are filtered using geoIP lookup with a k-d tree to reduce the sample size. The server runs using parallel processing on the cloud and scales automatically.<p>
+    	
+    Because MasterServer2 is a hosted service using standard protocols, you can use it immediately with no setup or download. It can work on any operating system or language that supports sockets. You don't even need to use RakNet (although it makes it easier).</p><p>
+    	
+    The public test server URI for HTTP operations is: <br>
+    <b><a href="http://masterserver2.raknet.com/testServer">http://masterserver2.raknet.com/testServer</a></b>
+  	</p><p>
+    <i>See the bottom of this document for sample code to integrate with C and C++.</i>
+    
+    </p><p>
+    <table cellspacing="10" cellpadding="10">
+    <tbody><tr>
+    <td valign="TOP"><img src="./masterserver2_files/wizToolsPost.jpg"></td>
+    <td valign="TOP"><img src="./masterserver2_files/wizToolsGet.jpg"></td>
+    </tr>
+    </tbody></table>
+    
+    </p><h2>Operations</h2>
+    
+    <h3>POST / PUT</h3>
+    
+    Write to the body of the POST or PUT operation the values you wish to upload, in JSON format. Values may be transmitted in any order. There is no currently a limit on the number of bytes you may upload. However, there is a limit on how many bytes will be returned in a GET request, so if your POST / PUT requests are very large fewer results will be returned to you. See the section on GET for the limits.<p>
+    
+    </p><h4>Example JSON formatted body</h4>
+    
+mapname and gameport are a user-defined values. The other values are control fields.<p>
+
+Request body:
+</p><pre>    
+{
+	"__gameId": "mygame",
+	"__clientReqId": "0",
+	"__timeoutSec": "300",
+	"__updatePW": "up",
+	"__readPW": "rp",
+	"mapname": "DoomCastle",
+	"gameport": "60000"
+}
+</pre>
+
+Response JSON:
+<pre>{"POST":
+{"__rowId":0,"__clientReqId":"0","__gameId":"mygame"}
+}
+</pre>
+		
+    
+    <h4>POST / PUT JSON input fields:</h4>
+    
+    <b>__timeoutSec</b><br>
+    <i>Optional</i>: Yes<br>
+    <i>Default</i>: 60 seconds<br>
+    <i>Minimum</i>: 15 seconds<br>
+    <i>Maximum</i>: 300 seconds on the public test server. 900 seconds on private servers.<br>
+    This parameter controls how long your game will be listed until it is deleted by the server. You must execute POST or PUT at least this often for your server to maintain continuous visibility. If your server crashes, then for the remainder of the timeout the server will be listed but unconnectable.<p>
+    
+    <b>__geoIP</b><br>
+    <i>Optional</i>: Yes<br>
+    <i>Default</i>: Whatever IP you connected to the server with (See __addr)<br>
+    This parameter allows you to override what IP address is used for Geographic lookup. You will get more accurate results if you do a traceroute to your ISP, and pass that IP address with __geoIP, rather than letting the system determine your IP automatically.</p><p>
+    
+    <b>__gameId</b><br>
+    <i>Optional</i>: Depends on server setting. Not optional on public server.<br>
+    <i>Default</i>: If optional, defaults to an unnamed game.<br>
+    This is a unique identifier for your game, of your choosing. If __gameId is unknown, the server will either create it or fail, depending on the server setting. On the public server, the server will create it. You may specify passwords for this game on creation with the control fields __updatePW and __readPW.</p><p>
+    
+    <b>__updatePW</b><br>
+    <i>Optional</i>: Yes<br>
+    <i>Default</i>: Empty string / no password.<br>
+    This password is used for POST, PUT, and DELETE operations. If specified when the a new game is created, this field specifies what password to set for future requests.</p><p>
+    
+    <b>__readPW</b><br>
+    <i>Optional</i>: Yes<br>
+    <i>Default</i>: Empty string / no password.<br>
+    This password is used for the GET operation. If specified when the a new game is created, this field specifies what password to set for future requests.</p><p>
+    
+    <b>__clientReqId</b><br>
+    <i>Optional</i>: Yes<br>
+    <i>Default</i>: NIL.<br>
+    The intent of __clientReqId is if you have multiple games on the same computer, you can choose which game to update or delete on a subsequent request. On success, the value passed to __clientReqId is returned to you, along with __gameId and __rowId of the row and game added or updated. While optional, if you do not pass __clientReqId there is no way to know what __rowId was assigned to your game, so no way to later update or delete the row.</p><p>
+    	
+    <b>__rowId</b><br>
+    <i>Optional</i>: Yes<br>
+    <i>Default</i>: NIL.<br>
+    If specified, a row with this ID will be overwritten, instead of creating a new row. After uploading a row the first time, you should use this __rowId on subsequent POST / PUT requests for the same game.</p><p>
+    	
+   	<b>__rowPW</b><br>
+    <i>Optional</i>: Yes<br>
+    <i>Default</i>: NIL.<br>
+    If __rowPW was specified when the row was created, you must also specify this value to update the row when using __rowId. The purpose of this value is to prevent players of other games from updating your own row. If a row required a password but it was not specified, or the password was wrong, error code 401 will be returned.
+    
+   </p><h4>POST / PUT return codes</h4>
+   
+   <b>200 OK</b><br>
+   <i>Reasons</i>:<br>
+   * Row has been posted. If __clientReqId was not passed in the request, body of reply will be empty.<br>
+   <p>
+   <b>400 Bad Request</b><br>
+   <i>Reasons</i>:<br>
+   * Body of post is empty<br>
+   * Invalid JSON format<br>
+   * Field was specified but empty<br>
+   * Unknown __gameId, or was required but not found<br>
+   * Cannot convert fields to required type, for example __timeoutSec: "notANumber" or a bad IP address for __geoIP<br>
+ 		</p><p>
+   
+   <b>401 Unauthorized</b><br>
+   <i>Reasons</i>:<br>
+   * Incorrect or missing game password<br>
+   * Incorrect or missing row password, when using __rowId<br>
+   </p><p>
+   
+   <b>403 Forbidden</b><br>
+   <i>Reasons</i>:<br>
+   * Body of post is empty<br>
+   * __timeoutSec is less than 15 seocnds, or greater than 300 seconds.<br>
+   * More than 10 entries posted from a single IP address. This limit is to reduce the effect of a malicious client flooding the database with bad entries. For example, if you set __timeoutSec with 15 seconds, a single IP address could post 10 games immediately, and then none at all for 15 seconds. Or 1 game every 1.5 seconds indefinitely.
+   </p><p>
+   	
+		<b>500 Internal server error</b><br>
+   <i>Reasons</i>:<br>
+   * Unknown internal error<br>
+   </p><p>
+	
+	</p><h3>GET</h3>
+	
+	Get results from the server. Results are returned in JSON format, with the key 'GET' in an array. Results and json values are in no particular order. Unlike POST / PUT, command parameters are in the URL rather than the BODY of the request, as this is part of the HTTP specification.  On the public test server, there is a limit of 10000 bytes returned per request. So for example, you could return 20 servers that each take 500 bytes to serialize and transmit back to you. Automatically populated fields count towards this limit.<p>
+    
+    </p><h4>Example</h4>
+    
+This requests all uploaded games for game "mygame" using the read password "rp".<p>
+	
+	
+Request URI:
+</p><pre>    
+http://masterserver2.raknet.com/testServer?__gameId=mygame&amp;__readPW=rp
+</pre>
+
+Actual TCP data sent to masterserver2.raknet.com:
+<pre>    
+GET /testServer?__gameId=mygame&amp;__readPW=rp HTTP/1.1
+Host: masterserver2.raknet.com
+Connection: Keep-Alive
+</pre>
+
+Response JSON, with no rows returned:
+<pre>{ "GET":
+[ ],
+"requestURL": "http://masterserver2.raknet.com/testServer?__gameId=mygame&amp;__readPW=rp"
+}
+</pre>
+
+Actual TCP data received, with no rows returned:
+<pre>HTTP/1.1 200 OK
+Date: Thu, 22 Nov 2012 05:59:38 GMT
+Content-Type: text/html
+Server: Google Frontend
+Content-Length: 17
+
+{ "GET":
+[ ] ,
+ "requestURL": "http://masterserver2.raknet.com/testServer?__gameId=mygame&amp;__readPW=rp"
+}
+</pre>	
+
+
+Response JSON, with one row returned:
+<pre>{ "GET": [
+{"__rowId":0,"__timeoutSec":300,"mapname":"DoomCastle","__addr":"127.0.0.1","gameport":"60000","__gameId":"mygame"}
+],
+ "requestURL": "http://masterserver2.raknet.com/testServer?__gameId=mygame&amp;__readPW=rp" }
+</pre>
+
+Reposne JSON, with three rows returned
+
+<pre>{ "GET": [
+{"__rowId":0,"__timeoutSec":300,"mapname":"DoomCastle","__addr":"127.0.0.1","gameport":"60000","__gameId":"mygame"}
+{"__rowId":2,"__timeoutSec":300,"mapname":"DoomCastle","__addr":"127.0.0.1","gameport":"60000","__gameId":"mygame"}
+{"__rowId":1,"__timeoutSec":300,"mapname":"DoomCastle","__addr":"127.0.0.1","gameport":"60000","__gameId":"mygame"}
+],
+ "requestURL": "http://masterserver2.raknet.com/testServer?__gameId=mygame&amp;__readPW=rp"
+}
+
+</pre>
+		
+		<h4>GET URL input fields:</h4>
+		
+		 <b>__gameId</b><br>
+    <i>Optional</i>: Depends on server setting. Not optional on public server.<br>
+    <i>Default</i>: If optional, defaults to an unnamed game.<br>
+    This is a unique identifier for the game you are querying.<p>
+    
+    <b>__readPW</b><br>
+    <i>Optional</i>: Yes<br>
+    <i>Default</i>: Empty string / no password.<br>
+    The password to use, if a password was required for this operation.</p><p>
+    
+	  <b>__geoIP</b><br>
+    <i>Optional</i>: Yes<br>
+    <i>Default</i>: Whatever IP you connected to the server with (See __addr)<br>
+    This parameter allows you to override what IP address is used for Geographic lookup. You will get more accurate results if you do a traceroute to your ISP, and pass that IP address with __geoIP, rather than letting the system determine your IP automatically.</p><p>
+    	
+    <b>__minResultsHint</b><br>
+    <i>Optional</i>: Yes<br>
+    <i>Default</i>: 200<br>
+    <i>Minimum</i>: 10<br>
+    <i>Maximum</i>: 500<br>    
+    The minimum number of results you would like to get back. Fewer results requires less load and bandwidth on the server. If there are not this many results available, all results will be returned.</p><p>
+    	
+    <b>__includeDist</b><br>
+    <i>Optional</i>: Yes<br>
+    <i>Default</i>: Not included<br>
+    If __includeDist is included in the GET URL, then __dist will be returned with the results. This is the distance squared between your approximate position and that of the server.</p><p> 
+    	
+    <b>__includeDistSq</b><br>
+    <i>Optional</i>: Yes<br>
+    <i>Default</i>: Not included<br>
+    If __includeDistSq is included in the GET URL, then __distSq will be returned with the results. This is the distance squared between your approximate position and that of the server.</p><p> 
+    	
+    <b>__excludeCols</b><br>
+    <i>Optional</i>: Yes<br>
+    <i>Default</i>: Not included<br>
+    Specify __excludeCols to not include named columns, to save bandwidth and thereby return more results. __excludeCols=__rowId,__city,__cityLon,__cityLat,__timeoutSec,__geoIP,__gameId would discard all automatic results</p><p> 
+
+   </p><h4>GET returned JSON fields:</h4>
+      
+    <b>__timeoutSec</b><br>
+    <i>Optional</i>: No<br>
+    TIme in seconds this entry was set to live.<p>
+    	
+    	<b>__addr</b><br>
+    	<i>Optional</i>: No<br>
+    IP address that uploaded this row.</p><p>
+    	
+    	<b>__city</b><br>
+    	<i>Optional</i>: Yes. If server cannot do lookup, will not be present.<br>
+    Estimated city from GeoIP lookup, using __addr unless __geoIP was specified instead.</p><p>
+    	
+    	<b>__cityLat</b><br>
+    	<i>Optional</i>: Yes. If server cannot do lookup, will not be present.<br>
+    Estimated lattitude from GeoIP lookup, using __addr unless __geoIP was specified instead.</p><p>
+    	
+    	<b>__cityLon</b><br>
+    	<i>Optional</i>: Yes. If server cannot do lookup, will not be present.<br>
+    Estimated longitude from GeoIP lookup, using __addr unless __geoIP was specified instead.</p><p>
+    	
+    	<b>__rowId</b><br>
+    	<i>Optional</i>: No<br>
+    Unique row ID for this game. Used for DELETE request to delete a row, and POST/PUT to update a row.
+    	
+	</p><h4>GET return codes</h4>
+	
+	<b>200 OK</b><br>
+   <i>Reasons</i>:<br>
+   * 0 or more rows returned. If 0 rows, body of reply will be empty.<br>
+	<p>
+   <b>400 Bad Request</b><br>
+   <i>Reasons</i>:<br>
+   * Unknown __gameId, or was required but not found<br>
+   * Cannot convert fields to required type, for example _rowId or __minResultsHint is not a number<br>
+   * Field was specified but empty<br>
+   * __minResultsHint is outside the allowed range</p><p>
+   
+   <b>401 Unauthorized</b><br>
+   <i>Reasons</i>:<br>
+   * Bad or missing password<br>
+   </p><p>
+   
+   <b>403 Forbidden</b><br>
+   <i>Reasons</i>:<br>
+   * __timeoutSec is outside the range of allowed values<br>
+   </p><p>
+   
+		<b>500 Internal server error</b><br>
+   <i>Reasons</i>:<br>
+   * Unknown internal errors<br>
+   </p><p>
+    
+    </p><h3>DELETE</h3>
+    
+    Deletes a specified row from the server, for the specified game.
+    
+    <h4>Example</h4>
+    
+Actual TCP data sent to masterserver2.raknet.com:
+<pre>DELETE /testServer?__gameId=mygame&amp;__rowId=0 HTTP/1.1\r\n
+Content-Length: 0\r\n
+Host: masterserver2.raknet.com\r\n
+Connection: Keep-Alive\r\n
+\r\n
+</pre>
+    
+    
+    
+    <h4>DELETE URL input fields:</h4>
+		
+		 <b>__gameId</b><br>
+    <i>Optional</i>: Depends on server setting. Not optional on public server.<br>
+    <i>Default</i>: If optional, defaults to an unnamed game.<br>
+    This is a unique identifier for the game you are querying.<p>
+    
+    <b>__updatePW</b><br>
+    <i>Optional</i>: Yes<br>
+    <i>Default</i>: Empty string / no password.<br>
+    The password to use, if a password was required for this operation.</p><p>
+    
+	  <b>__rowId</b><br>
+    	<i>Optional</i>: No<br>
+    Which row to delete.</p><p>
+    	
+    	
+   </p><h4>DELETE return codes</h4>
+   
+   <b>200 OK</b><br>
+   <i>Reasons</i>:<br>
+   * A row was deleted<br>
+   * Row not found<br>
+   <p>
+   <b>400 Bad Request</b><br>
+   <i>Reasons</i>:<br>
+   * Unknown __gameId, or was required but not found<br>
+   * __rowId not specified<br>
+   * Cannot convert fields to required type, for example _rowId=notANumber<br>
+   * Field was specified but empty<br>
+ 		</p><p>
+   
+
+    
+</p><h2>Test programs</h2>
+ 
+<b>Windows sockets:</b>
+<pre>#include "WinSock2.h"
+#include "windows.h"
+#include "Ws2tcpip.h"
+#include "stdio.h"
+void main(void)
+{
+	WSADATA winsockInfo;
+	WSAStartup( MAKEWORD( 2, 2 ), &amp;winsockInfo );
+	int sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	struct sockaddr_in serverAddr;
+	memset(&amp;serverAddr,0,sizeof(sockaddr_in));
+	serverAddr.sin_family = AF_INET;
+	serverAddr.sin_port = 0;
+	int j = bind(sock,(struct sockaddr *) &amp;serverAddr,sizeof(serverAddr));
+	struct hostent * phe = gethostbyname( "masterserver2.raknet.com" );
+	memcpy( &amp;serverAddr.sin_addr.s_addr, phe-&gt;h_addr_list[ 0 ], sizeof( struct in_addr ) );
+	serverAddr.sin_port        = htons(80);
+	connect(sock, (struct sockaddr *) &amp;serverAddr, sizeof(serverAddr));
+	const char *postRequest =
+		"POST /testServer HTTP/1.1\r\n"
+		"Content-Length: 83\r\n"
+		"Content-Type: text/plain; charset=UTF-8\r\n"
+		"Host: masterserver2.raknet.com\r\n"
+		"Connection: Keep-Alive\r\n"
+		"\r\n"
+		"{'__gameId': 'myGame','__clientReqId': '0','__timeoutSec': '60','mapname': 'myMap'}\r\n";
+	send(sock, postRequest, strlen(postRequest), 0);
+	char outputBuffer[512];
+	memset(outputBuffer,0,512);
+	recv(sock, outputBuffer, 512, 0);
+	printf(outputBuffer);
+}
+</pre>
+
+<b>RakNet</b>
+<pre>#include "TCPInterface.h"
+#include "RakString.h"
+#include "RakSleep.h"
+using namespace RakNet;
+void main(void)
+{
+	TCPInterface *tcp = RakNet::OP_NEW<tcpinterface>(__FILE__,__LINE__);
+	tcp-&gt;Start(0, 64);
+	tcp-&gt;Connect("masterserver2.raknet.com", 80, true);
+	RakString rspost = RakString::FormatForPOST(
+		RakString("masterserver2.raknet.com/testServer"),
+		RakString("text/plain; charset=UTF-8"),
+		RakString("{'__gameId': 'myGame','__clientReqId': '0','__timeoutSec': '60','mapname': 'myMap'}"));
+	RakSleep(100);
+	SystemAddress serverAddr = tcp-&gt;HasCompletedConnectionAttempt();
+	tcp-&gt;Send(rspost.C_String(), rspost.GetLength(), serverAddr, false);
+	RakSleep(1000);
+	Packet *p = tcp-&gt;Receive();
+	if (p) printf((const char*) p-&gt;data);
+}
+</tcpinterface></pre>
+
+    
+    
+       
+  
+
+</body></html>
