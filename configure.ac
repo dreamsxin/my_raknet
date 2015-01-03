@@ -16,7 +16,7 @@
 # `AC_OUTPUT'
 
 AC_PREREQ([2.69])
-AC_INIT([raknet], [1.0], [rakkar@jenkinssoftware.com])
+AC_INIT([raknet], [4.81], [rakkar@jenkinssoftware.com])
 :${CXXFLAGS=""}
 AM_INIT_AUTOMAKE
 LT_PREREQ([2.2])
@@ -70,6 +70,8 @@ AC_SUBST(RN_CXXFLAGS)
 
 # checks for libraries.
 AX_PTHREAD
+LIBS="$PTHREAD_LIBS $LIBS"
+CXXFLAGS="$PTHREAD_CFLAGS $CXXFLAGS"
 
 # Checks for header files.
 AC_FUNC_ALLOCA
@@ -100,6 +102,7 @@ AC_CONFIG_FILES([
 		DependentExtensions/Makefile
 		DependentExtensions/cat/Makefile
 		Samples/Makefile
+		Samples/Tests/Makefile
 		])
 
 AC_OUTPUT
