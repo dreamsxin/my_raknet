@@ -4,7 +4,7 @@ else
 AM_CPPFLAGS = $(RN_CPPFLAGS) -I$(top_srcdir)/DependentExtensions
 endif
 AM_CXXFLAGS = $(RN_CXXFLAGS)
-AM_LDFLAGS = -version-info 0:0:0
+AM_LDFLAGS = -version-info 4:81:0
 
 #convenience libraries
 if !RN_LIBCATSECURITY
@@ -15,7 +15,7 @@ endif
 convenience_libraries = $(libcat)
 
 #libRakNet.la: distributable shared library
-pkglib_LTLIBRARIES = libRakNet.la
+lib_LTLIBRARIES = libRakNet.la
 
 libRakNet_la_LIBADD = $(convenience_libraries)
 
