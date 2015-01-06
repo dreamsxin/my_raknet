@@ -69,9 +69,17 @@ AC_SUBST(RN_CPPFLAGS)
 AC_SUBST(RN_CXXFLAGS)
 
 # checks for libraries.
-AX_PTHREAD
-LIBS="$PTHREAD_LIBS $LIBS"
-CXXFLAGS="$PTHREAD_CFLAGS $CXXFLAGS"
+AX_PTHREAD([
+	LIBS="$PTHREAD_LIBS $LIBS"
+	CXXFLAGS="$PTHREAD_CFLAGS $CXXFLAGS"],
+	[AC_MSG_ERROR([
+	----------------------------------------
+	The pthread library and development
+	packages are required to build raknet. 
+	Stopping...
+	Check 'config.log' for more information.
+	----------------------------------------])
+	])
 
 # Checks for header files.
 AC_FUNC_ALLOCA
