@@ -6,7 +6,7 @@ SUBDIRS = Tests
 #	CrossConnectionTest DirectoryDeltaTransfer "Dropped Connection Test" \
 #	Encryption FCMHost FCMHostSimultaneous FCMVerifiedJoinSimultaneous \
 #	"Flow Control Test" "Fully Connected Mesh" \
-#	LANServerDiscovery Lobby2Client MasterServer \
+#	Lobby2Client MasterServer \
 #	NATCompleteClient NATCompleteServer OfflineMessagesTest \
 #	PacketLogger PHPDirectoryServer2 RackspaceConsole RakVoice \
 #	RakVoiceFMOD "Reliable Ordered Test" Router2 \
@@ -60,6 +60,11 @@ ComprehensiveTestSample_SOURCES = \
 samples_PROGRAMS += FileListTransferSample
 FileListTransferSample_SOURCES = \
 	FileListTransfer/main.cpp
+
+#LANServerDiscovery
+samples_PROGRAMS += LANServerDiscoverySample
+LANServerDiscoverySample_SOURCES = \
+	LANServerDiscovery/LANServerDiscovery.cpp
 
 #MessageFilter
 samples_PROGRAMS += MessageFilterSample
