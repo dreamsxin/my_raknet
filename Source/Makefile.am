@@ -6,6 +6,8 @@ endif
 AM_CXXFLAGS = $(RN_CXXFLAGS)
 AM_LDFLAGS = -version-info 4:81:0
 
+LIBS = 
+
 #convenience libraries
 if !RN_LIBCATSECURITY
 libcat =
