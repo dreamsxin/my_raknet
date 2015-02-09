@@ -4,6 +4,6 @@ else
 catfolder =
 endif
 
-SUBDIRS = $(catfolder)
+SUBDIRS = $(catfolder) miniupnpc-1.5
 
 EXTRA_DIST = bzip2-1.0.6 XML

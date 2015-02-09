@@ -723,6 +723,7 @@ const core::aabbox3df& CDemo::GetSyndeyBoundingBox(void) const
 }
 void CDemo::PlayDeathSound(core::vector3df position)
 {
+#ifdef USE_IRRKLANG
 	if (irrKlang)
 	{
 		irrklang::ISound* sound = 
@@ -734,7 +735,8 @@ void CDemo::PlayDeathSound(core::vector3df position)
 			sound->setMinDistance(400);
 			sound->drop();
 		}
-	}	
+	}
+#endif
 }
 void CDemo::EnableInput(bool enabled)
 {
@@ -767,7 +769,7 @@ RakNet::TimeMS CDemo::shootFromOrigin(core::vector3df camPosition, core::vector3
 	core::line3d<f32> line(start, end);
 
 	// get intersection point with map
-	scene::ISceneNode* hitNode;
+	const scene::ISceneNode* hitNode;
 	if (sm->getSceneCollisionManager()->getCollisionPoint(
 		line, mapSelector, end, triangle, hitNode))
 	{
@@ -997,7 +999,8 @@ void CDemo::UpdateRakNet(void)
 			{
 				DataStructures::List<RakNet::SystemAddress> addresses;
 				DataStructures::List<RakNet::RakNetGUID> guids;
-				fullyConnectedMesh2->GetVerifiedJoinRequiredProcessingList(packet->guid, addresses, guids);
+				DataStructures::List<RakNet::BitStream*> userData;
+				fullyConnectedMesh2->GetVerifiedJoinRequiredProcessingList(packet->guid, addresses, guids, userData);
 				for (unsigned int i=0; i < guids.Size(); i++)
 					natPunchthroughClient->OpenNAT(guids[i], facilitatorSystemAddress);
 			}

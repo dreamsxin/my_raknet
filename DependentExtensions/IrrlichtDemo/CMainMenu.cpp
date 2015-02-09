@@ -42,7 +42,7 @@ public:
 		}
 
 		irr::video::SColorHSL color;
-		irr::video::SColorf rgb(0);
+		irr::video::SColor rgb(0);
 		color.Hue = ( (timeMs + Phase) % Frequency  ) * ( 2.f * irr::core::PI / Frequency );
 		color.Saturation = 1.f;
 		color.Luminance = 0.5f;

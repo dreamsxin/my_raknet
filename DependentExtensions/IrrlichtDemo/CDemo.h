@@ -4,7 +4,7 @@
 #ifndef __C_DEMO_H_INCLUDED__
 #define __C_DEMO_H_INCLUDED__
 
-#define USE_IRRKLANG
+//#define USE_IRRKLANG
 //#define USE_SDL_MIXER
 
 // For windows 1.6 must be used for this demo unless you recompile the dlls and replace them, 

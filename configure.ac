@@ -109,6 +109,8 @@ AC_CONFIG_FILES([
 		Source/Makefile
 		DependentExtensions/Makefile
 		DependentExtensions/cat/Makefile
+		DependentExtensions/miniupnpc-1.5/Makefile
+		DependentExtensions/IrrlichtDemo/Makefile
 		Samples/Makefile
 		Samples/Tests/Makefile
 		])

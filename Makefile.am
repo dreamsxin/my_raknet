@@ -6,7 +6,7 @@ else
 samplesdir =
 endif 
 
-SUBDIRS = DependentExtensions Source $(samplesdir)
+SUBDIRS = DependentExtensions Source $(samplesdir) DependentExtensions/IrrlichtDemo
 
 #Help docs
 helppkg = Help-$(PACKAGE_VERSION).tar.gz
