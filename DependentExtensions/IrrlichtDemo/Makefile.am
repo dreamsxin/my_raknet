@@ -4,7 +4,10 @@ AM_CPPFLAGS = -iquote$(top_srcdir)/Source \
 	$(RN_CPPFLAGS)
 AM_CXXFLAGS = $(RN_CXXFLAGS)
 
-AM_LDFLAGS = -rpath $(libdir)
+irrlichtdir = $(pkgdatadir)/Samples/Irrlicht
+
+AM_LDFLAGS = -rpath $(libdir) \
+	-rpath $(irrlichtdir)
 
 LDADD = \
 	$(top_builddir)/Source/libRakNet.la \
@@ -14,7 +17,6 @@ LDADD = \
 AUTOMAKE_OPTIONS = subdir-objects
 
 #IrrlichtDemo program
-irrlichtdir = $(pkgdatadir)/Samples/Irrlicht
 irrlicht_PROGRAMS = IrrlichtDemo
 
 IrrlichtDemo_SOURCES = \
@@ -202,26 +204,37 @@ IrrlichtDemo_SOURCES = \
 	irrlicht-1.7.3/SViewFrustum.h \
 	irrlicht-1.7.3/triangle3d.h \
 	irrlicht-1.7.3/vector2d.h \
-	irrlicht-1.7.3/vector3d.h \
-	irrKlang-1.1.3/ik_ESoundEngineOptions.h \
-	irrKlang-1.1.3/ik_ESoundOutputDrivers.h \
-	irrKlang-1.1.3/ik_EStreamModes.h \
-	irrKlang-1.1.3/ik_IAudioRecorder.h \
-	irrKlang-1.1.3/ik_IAudioStream.h \
-	irrKlang-1.1.3/ik_IAudioStreamLoader.h \
-	irrKlang-1.1.3/ik_IFileFactory.h \
-	irrKlang-1.1.3/ik_IFileReader.h \
-	irrKlang-1.1.3/ik_IRefCounted.h \
-	irrKlang-1.1.3/ik_irrKlangTypes.h \
-	irrKlang-1.1.3/ik_ISoundDeviceList.h \
-	irrKlang-1.1.3/ik_ISoundEffectControl.h \
-	irrKlang-1.1.3/ik_ISoundEngine.h \
-	irrKlang-1.1.3/ik_ISound.h \
-	irrKlang-1.1.3/ik_ISoundSource.h \
-	irrKlang-1.1.3/ik_ISoundStopEventReceiver.h \
-	irrKlang-1.1.3/ik_IVirtualRefCounted.h \
-	irrKlang-1.1.3/ik_SAudioStreamFormat.h \
-	irrKlang-1.1.3/ik_vec3d.h \
-	irrKlang-1.1.3/irrKlang.h
+	irrlicht-1.7.3/vector3d.h
 
 #data
+dist_irrlicht_DATA = \
+	$(srcdir)/libIrrlicht.so \
+	$(srcdir)/readme.txt
+
+irrlichtmediadir = $(irrlichtdir)/IrrlichtMedia
+dist_irrlichtmedia_DATA = \
+	$(srcdir)/IrrlichtMedia/ball.wav \
+	$(srcdir)/IrrlichtMedia/fireball.bmp \
+	$(srcdir)/IrrlichtMedia/fonthaettenschweiler.bmp \
+	$(srcdir)/IrrlichtMedia/impact.wav \
+	$(srcdir)/IrrlichtMedia/irrlicht2_bk.jpg \
+	$(srcdir)/IrrlichtMedia/irrlicht2_dn.jpg \
+	$(srcdir)/IrrlichtMedia/irrlicht2_ft.jpg \
+	$(srcdir)/IrrlichtMedia/irrlicht2_lf.jpg \
+	$(srcdir)/IrrlichtMedia/irrlicht2_rt.jpg \
+	$(srcdir)/IrrlichtMedia/irrlicht2_up.jpg \
+	$(srcdir)/IrrlichtMedia/irrlicht.dat \
+	$(srcdir)/IrrlichtMedia/irrlichtlogo2.png \
+	$(srcdir)/IrrlichtMedia/IrrlichtTheme.ogg \
+	$(srcdir)/IrrlichtMedia/map-20kdm2.pk3 \
+	$(srcdir)/IrrlichtMedia/particlewhite.bmp \
+	$(srcdir)/IrrlichtMedia/portal1.bmp \
+	$(srcdir)/IrrlichtMedia/portal2.bmp \
+	$(srcdir)/IrrlichtMedia/portal3.bmp \
+	$(srcdir)/IrrlichtMedia/portal4.bmp \
+	$(srcdir)/IrrlichtMedia/portal5.bmp \
+	$(srcdir)/IrrlichtMedia/portal6.bmp \
+	$(srcdir)/IrrlichtMedia/portal7.bmp \
+	$(srcdir)/IrrlichtMedia/smoke.bmp \
+	$(srcdir)/IrrlichtMedia/sydney.bmp \
+	$(srcdir)/IrrlichtMedia/sydney.md2
