@@ -210,6 +210,11 @@ IrrlichtDemo_SOURCES = \
 dist_irrlicht_DATA = \
 	$(srcdir)/libIrrlicht.so \
 	$(srcdir)/readme.txt
+	
+install-data-hook:
+	ln -s $(irrlichtdir)/libIrrlicht.so $(irrlichtdir)/libIrrlicht.so.1.7.3
+uninstall-local:
+	rm -rf $(irrlichtdir)/libIrrlicht.so.1.7.3
 
 irrlichtmediadir = $(irrlichtdir)/IrrlichtMedia
 dist_irrlichtmedia_DATA = \

@@ -21,7 +21,7 @@
 #include "UDPProxyClient.h"
 #include "TCPInterface.h"
 #include "HTTPConnection.h"
-#include "../Samples/PHPDirectoryServer2/PHPDirectoryServer2.h"
+//#include "../Samples/PHPDirectoryServer2/PHPDirectoryServer2.h"
 #include "vector3d.h"
 #include "IAnimatedMeshSceneNode.h"
 #include "MessageIdentifiers.h"
