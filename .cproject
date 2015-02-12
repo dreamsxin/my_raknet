@@ -73,7 +73,7 @@
 								<option id="gnu.cpp.compiler.option.preprocessor.def.786002037" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="LIBCAT_SECURITY=1"/>
 								</option>
-								<option id="gnu.cpp.compiler.option.include.paths.667618155" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+								<option id="gnu.cpp.compiler.option.include.paths.667618155" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/my_raknet/Source}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1099458268" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
