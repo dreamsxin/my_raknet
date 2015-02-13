@@ -27,3 +27,5 @@ uninstall-local:
 
 dist-hook:
 	rm -rf $(helppkg)
+
+CLEANFILES = $(helppkg)

@@ -206,6 +206,13 @@ IrrlichtDemo_SOURCES = \
 	irrlicht-1.7.3/vector2d.h \
 	irrlicht-1.7.3/vector3d.h
 
+all-local:
+	ln -sf $(srcdir)/libIrrlicht.so $(builddir)/libIrrlicht.so.1.7.3
+	ln -sf $(srcdir)/IrrlichtMedia $(builddir)/IrrlichtMedia
+
+clean-local:
+	rm -f $(builddir)/libIrrlicht.so.1.7.3 $(builddir)/IrrlichtMedia
+
 #data
 dist_irrlicht_DATA = \
 	$(srcdir)/libIrrlicht.so \
