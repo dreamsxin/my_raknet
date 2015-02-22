@@ -13,7 +13,8 @@ SUBDIRS = Tests
 #	RPC3 RPC4 StatisticsHistoryTest \
 #	TestDLL TitleValidationDB_PostgreSQL
 
-AM_CPPFLAGS = -iquote$(top_srcdir)/Source $(RN_CPPFLAGS)
+AM_CPPFLAGS = -iquote$(top_srcdir)/Source -I$(top_srcdir)/DependentExtensions \
+	$(RN_CPPFLAGS)
 AM_CXXFLAGS = $(RN_CXXFLAGS)
 
 AM_LDFLAGS = -rpath $(libdir)
