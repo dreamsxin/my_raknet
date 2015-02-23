@@ -38,13 +38,12 @@ Once the user press Start Demo, InstantiateRakNetClasses is called. It allocates
 all RakNet classes including the dependent plugins. It will also try to connect to 
 the NATCompleteServer sample hosted  hosted by Jenkins Software.
 
-Once we are connected to the NATPunchthroughServer 
-(See ID_CONNECTION_REQUEST_ACCEPTED), UPNP will run to open the router if possible. 
-It will try to open the external port connected to the NATPunchthroughServer. It will 
-map that to the internal port used by RakNet. If it succeeds, NATPunchthrough should 
-automatically succeed for this system. Next, the cloudServer will be queried for 
-active connections. If any connections are returned, 
-NATPunchthroughClient::OpenNATGroup() to open the router for those systems. 
+Once we are connected to the NATPunchthroughServer (See ID_CONNECTION_REQUEST_ACCEPTED), 
+UPNP will run to open the router if possible. It will try to open the external port 
+connected to the NATPunchthroughServer. It will map that to the internal port used by 
+RakNet. If it succeeds, NATPunchthrough should automatically succeed for this system. 
+Next, the cloudServer will be queried for active connections. If any connections are 
+returned, NATPunchthroughClient::OpenNATGroup() to open the router for those systems. 
 On success, those systems are connected to. If there are no existing games, or on 
 failure, a new game is started.
 
