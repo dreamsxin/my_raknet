@@ -18,6 +18,7 @@
 AC_PREREQ([2.69])
 AC_INIT([raknet], [4.81], [rakkar@jenkinssoftware.com])
 :${CXXFLAGS=""}
+:${CFLAGS=""}
 AM_INIT_AUTOMAKE
 LT_PREREQ([2.2])
 LT_INIT([dlopen])
@@ -28,64 +29,77 @@ AC_CONFIG_MACRO_DIR([m4])
 AC_PREFIX_DEFAULT([/usr])
 AM_SILENT_RULES
 
-#
-RN_CPPFLAGS=""
-# checks for programs.
+# Checks for programs.
 AC_PROG_CXX
+AC_PROG_AWK
 AC_PROG_CC
+AC_PROG_CPP
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PROG_MAKE_SET
 AC_LANG([C++])
-# default RN CXXFLAGS (release mode)
-RN_CXXFLAGS="-O3 -w -fmessage-length=0"
-buildtype=Release
-# checks/sets options
-# RN_DEBUG
-AC_ARG_ENABLE([debug],
-	AS_HELP_STRING([--enable-debug],
-		[@<:@=yes@:>@ enable Raknet debug mode (disabled by default)]),
-    [debug=${enableval}], [debug=no])
-if test "x${debug}" != xno; then
-    RN_CXXFLAGS="-O0 -g3 -Wall -fmessage-length=0"
-    buildtype=Debug
-fi
-#----------------------------------------------------------------------------
-# Package configuration switches.
-#----------------------------------------------------------------------------
-AC_ARG_ENABLE([samples],
-    [AS_HELP_STRING([--disable-samples],
-            [disable build samples (default YES)])],
-    [build_samples=no],
-    [build_samples=yes])
-AM_CONDITIONAL([BUILD_SAMPLES],[test "x$build_samples" == xyes])
 
-AC_ARG_WITH([libcat],
-	[AS_HELP_STRING([--with-libcat],
-		[@<:@=yes@:>@ with libcat security (default NO)])],
-    [libcat_security=yes
-    AC_DEFINE([LIBCAT_SECURITY],[1])],
-    [libcat_security=no])
-AM_CONDITIONAL([RN_LIBCATSECURITY], [test "x${libcat_security}" == xyes])
-
+#
 AC_SUBST(RN_CPPFLAGS)
 AC_SUBST(RN_CXXFLAGS)
+AC_SUBST(RN_LDFLAGS)
+AC_SUBST(RN_LIBS)
+#
+RN_CPPFLAGS=
+# default build: Release
+RN_CXXFLAGS=
+buildtype=
+AC_ARG_ENABLE([relwithdebinfo],
+	AS_HELP_STRING([--enable-relwithdebinfo],
+		[@<:@=yes@:>@ enable Release with Debug info mode (disabled by default)]),
+    [relwithdebinfo=${enableval}],
+    [relwithdebinfo=no]
+    )
+AC_ARG_ENABLE([debug],
+	AS_HELP_STRING([--enable-debug],
+		[@<:@=yes@:>@ enable Debug mode (disabled by default)]),
+    [debug=${enableval}],
+    [debug=no]
+    )
 
-# checks for libraries.
-AX_PTHREAD([
-	LIBS="$PTHREAD_LIBS $LIBS"
-	CXXFLAGS="$PTHREAD_CFLAGS $CXXFLAGS"],
-	[AC_MSG_ERROR([
-	----------------------------------------
-	The pthread library and development
-	packages are required to build raknet. 
-	Stopping...
-	Check 'config.log' for more information.
-	----------------------------------------])
-	])
+AS_IF(
+		#RelWithDebInfo
+	[test "x${relwithdebinfo}" != xno],
+	[buildtype=RelWithDebInfo
+	RN_CXXFLAGS="-O2 -g -fmessage-length=0"],
+		#Debug
+	[test "x${debug}" != xno],
+	[buildtype=Debug
+	AC_DEFINE([_DEBUG])
+	#AC_DEFINE([DEBUG_FCM2])
+	#AC_DEFINE([_DEBUG_LOGGER])
+	#AC_DEFINE([_PRINTF_DEBUG])
+	RN_CXXFLAGS="-O0 -g3 -Wall -fmessage-length=0"],
+		#Release
+	[buildtype=Release
+	AC_DEFINE([NDEBUG])
+	RN_CXXFLAGS="-O3 -w -fmessage-length=0"]
+	)	
+#
+RN_LDFLAGS=
+RN_LIBS=
 
+#c++d std headers
+AX_CXX_HEADER_STDCXX_98
+
+# Checks for libraries.
+required_libraries=
+AC_SEARCH_LIBS([pthread_create], [pthread], [RN_LIBS="${RN_LIBS} ${ac_cv_search_pthread_create}"], [required_libraries=${required_libraries}" 'pthread' "])
+	
 # Checks for header files.
 AC_FUNC_ALLOCA
-AC_CHECK_HEADERS([arpa/inet.h fcntl.h float.h limits.h malloc.h memory.h netdb.h netinet/in.h stdint.h stdlib.h string.h sys/ioctl.h sys/socket.h sys/time.h termios.h unistd.h wchar.h])
+AC_CHECK_HEADERS([arpa/inet.h fcntl.h float.h limits.h malloc.h memory.h netdb.h netinet/in.h stdint.h stdlib.h string.h strings.h sys/ioctl.h sys/socket.h sys/time.h termios.h unistd.h wchar.h])
+required_headers=
+AC_CHECK_HEADER([pthread.h],[],[required_headers=${required_headers}" 'pthread' "])
+#
+STOP_ON_CHECKS_ERR([$required_libraries],[$required_headers],['RakNet'])
 
-# checks for typedefs, structures, and compiler characteristics.
+# Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_HEADER_STDBOOL
 AC_C_INLINE
 AC_TYPE_INT16_T
@@ -101,9 +115,47 @@ AC_TYPE_UINT8_T
 
 # Checks for library functions.
 AC_FUNC_MALLOC
+AC_FUNC_MMAP
 AC_FUNC_REALLOC
-AC_CHECK_FUNCS([atexit gethostbyname gethostname gettimeofday inet_ntoa memmove memset mkdir select socket sqrt strcasecmp strerror strncasecmp strpbrk strrchr strstr strtoul strtoull])
+AC_CHECK_FUNCS([atexit gethostbyname gethostname gettimeofday inet_ntoa localtime_r memmove memset mkdir munmap pow select socket sqrt strcasecmp strerror strncasecmp strpbrk strrchr strstr strtoul strtoull])
 
+#----------------------------------------------------------------------------
+# Package configuration switches.
+#----------------------------------------------------------------------------
+#Samples
+AC_ARG_ENABLE([samples],
+	[AS_HELP_STRING([--enable-samples],
+		[@<:@=yes@:>@ enable RakNet sample programs build (disabled by default)])],
+    [build_samples=${enableval}
+    if test "x${build_samples}" != xno ; then
+		build_samples=yes
+		# Checks libraries for samples.
+		required_libraries=
+		# Checks header files for samples.
+		required_headers=
+		# Checks for typedefs, structures, and compiler characteristics.
+		# Checks for library functions.
+		AC_CHECK_FUNCS([floor getcwd])
+		#
+		STOP_ON_CHECKS_ERR([$required_libraries],[$required_headers],['libRocket' sample programs])
+	fi
+	],
+    [build_samples=no]
+	)
+AM_CONDITIONAL([BUILD_SAMPLES],[test "x$build_samples" == xyes])
+
+#libcat security
+AC_ARG_WITH([libcat],
+	[AS_HELP_STRING([--with-libcat],
+		[@<:@=yes@:>@ with libcat security (default NO)])],
+    [libcat_security=yes
+    AC_DEFINE([LIBCAT_SECURITY],[1])],
+    [libcat_security=no])
+AM_CONDITIONAL([RN_LIBCATSECURITY], [test "x${libcat_security}" == xyes])
+
+#----------------------------------------------------------------------------
+# Makefiles.
+#----------------------------------------------------------------------------
 AC_CONFIG_FILES([
 		Makefile
 		Source/Makefile
@@ -115,6 +167,9 @@ AC_CONFIG_FILES([
 		Samples/Tests/Makefile
 		])
 
+#----------------------------------------------------------------------------
+# Emit generated files.
+#----------------------------------------------------------------------------
 AC_OUTPUT
 
 echo

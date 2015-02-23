@@ -1,7 +1,9 @@
 #this Makefile.am is derived from revision 485 of http://libcatid.googlecode.com/svn/trunk
 AM_CPPFLAGS = $(RN_CPPFLAGS) -I$(top_srcdir)/DependentExtensions
 AM_CXXFLAGS = $(RN_CXXFLAGS)
-AM_LDFLAGS = 
+AM_LDFLAGS = $(RN_LDFLAGS)
+
+LIBS = $(RN_LIBS)
 
 #libcat.a: static library
 noinst_LIBRARIES = libcat.a

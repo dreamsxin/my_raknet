@@ -4,9 +4,9 @@ else
 AM_CPPFLAGS = $(RN_CPPFLAGS) -I$(top_srcdir)/DependentExtensions
 endif
 AM_CXXFLAGS = $(RN_CXXFLAGS)
-AM_LDFLAGS = -version-info 4:81:0
+AM_LDFLAGS = $(RN_LDFLAGS) -version-info 4:81:0
 
-LIBS = 
+LIBS = $(RN_LIBS)
 
 #convenience libraries
 if !RN_LIBCATSECURITY
