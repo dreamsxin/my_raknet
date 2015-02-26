@@ -5,6 +5,8 @@ AM_LDFLAGS = $(RN_LDFLAGS)
 
 LIBS = $(RN_LIBS)
 
+AUTOMAKE_OPTIONS = subdir-objects
+
 #libcat.a: static library
 noinst_LIBRARIES = libcat.a
 

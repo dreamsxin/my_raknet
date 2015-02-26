@@ -36,6 +36,7 @@ aclocal.m4
 build-*/
 config.*
 configure
+compile
 COPYING
 depcomp
 INSTALL
