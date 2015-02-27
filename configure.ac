@@ -161,6 +161,7 @@ AC_CONFIG_FILES([
 		Source/Makefile
 		DependentExtensions/Makefile
 		DependentExtensions/cat/Makefile
+		DependentExtensions/miniupnpc-1.6.20120410/Makefile
 		Samples/Makefile
 		Samples/Tests/Makefile
 		])
