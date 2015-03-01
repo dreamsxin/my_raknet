@@ -84,19 +84,23 @@ AS_IF(
 RN_LDFLAGS=
 RN_LIBS=
 
-#for miniupnpc-1.6.20120410
-AC_DEFINE([_GNU_SOURCE])
-
 #c++d std headers
 AX_CXX_HEADER_STDCXX_98
 
 # Checks for libraries.
 required_libraries=
-AC_SEARCH_LIBS([pthread_create], [pthread], [RN_LIBS="${RN_LIBS} ${ac_cv_search_pthread_create}"], [required_libraries=${required_libraries}" 'pthread' "])
+AC_SEARCH_LIBS([pthread_create], 
+			   [pthread], 
+			   [RN_LIBS="${RN_LIBS} ${ac_cv_search_pthread_create}"], 
+			   [required_libraries=${required_libraries}" 'pthread' "])
 	
 # Checks for header files.
 AC_FUNC_ALLOCA
-AC_CHECK_HEADERS([arpa/inet.h fcntl.h float.h limits.h malloc.h memory.h netdb.h netinet/in.h stdint.h stdlib.h string.h strings.h sys/ioctl.h sys/param.h sys/socket.h sys/time.h termios.h unistd.h wchar.h])
+AC_CHECK_HEADERS([arpa/inet.h fcntl.h float.h inttypes.h limits.h locale.h \
+		malloc.h memory.h netdb.h netinet/in.h stddef.h stdint.h \
+		stdlib.h string.h string.h strings.h sys/ioctl.h sys/param.h \
+		sys/socket.h sys/time.h termios.h unistd.h wchar.h])
+
 required_headers=
 AC_CHECK_HEADER([pthread.h],[],[required_headers=${required_headers}" 'pthread' "])
 #
@@ -105,25 +109,29 @@ STOP_ON_CHECKS_ERR([$required_libraries],[$required_headers],['RakNet'])
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_HEADER_STDBOOL
 AC_C_INLINE
+AC_C_RESTRICT
 AC_TYPE_INT16_T
 AC_TYPE_INT32_T
 AC_TYPE_INT64_T
 AC_TYPE_INT8_T
-AC_C_RESTRICT
+AC_TYPE_PID_T
 AC_TYPE_SIZE_T
+AC_TYPE_SSIZE_T
 AC_TYPE_UINT16_T
 AC_TYPE_UINT32_T
 AC_TYPE_UINT64_T
 AC_TYPE_UINT8_T
-AC_TYPE_PID_T
-AC_TYPE_SSIZE_T
 
 # Checks for library functions.
+AC_FUNC_FORK
 AC_FUNC_MALLOC
 AC_FUNC_MMAP
 AC_FUNC_REALLOC
-AC_FUNC_FORK
-AC_CHECK_FUNCS([atexit gethostbyname gethostname gettimeofday inet_ntoa localtime_r memmove memset mkdir munmap pow select socket sqrt strcasecmp strchr strdup strerror strncasecmp strpbrk strrchr strstr strtoul strtoull])
+AC_FUNC_STRTOD
+AC_CHECK_FUNCS([atexit gethostbyname gethostname gettimeofday inet_ntoa \
+		localeconv localtime_r memmove memset mkdir munmap pow \
+		select socket sqrt strcasecmp strchr strdup strerror \
+		strncasecmp strpbrk strrchr strspn strstr strtoul strtoull])
 
 #----------------------------------------------------------------------------
 # Package configuration switches.
@@ -167,6 +175,7 @@ AC_CONFIG_FILES([
 		Source/Makefile
 		DependentExtensions/Makefile
 		DependentExtensions/cat/Makefile
+		DependentExtensions/jansson-2.4/src/Makefile
 		DependentExtensions/Lobby2/Makefile
 		DependentExtensions/miniupnpc-1.6.20120410/Makefile
 		DependentExtensions/RPC3/Makefile

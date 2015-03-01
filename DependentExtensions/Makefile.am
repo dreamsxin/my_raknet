@@ -5,4 +5,4 @@ catfolder =
 endif
 
 SUBDIRS = $(catfolder) miniupnpc-1.6.20120410 \
-	RPC3 Lobby2
+	RPC3 Lobby2 jansson-2.4/src

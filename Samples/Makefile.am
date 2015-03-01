@@ -61,11 +61,11 @@ CommandConsoleServerSample_SOURCES = \
 	CommandConsoleServer/main.cpp
 
 #ComprehensivePCGame SOURCE_CORRECTED
-#samples_PROGRAMS += ComprehensivePCGameSample
-#ComprehensivePCGameSample_CPPFLAGS = $(AM_CPPFLAGS) \
-#	-iquote$(top_srcdir)/DependentExtensions/miniupnpc-1.6.20120410
-#ComprehensivePCGameSample_SOURCES = \
-#	ComprehensivePCGame_CORRECTED/ComprehensivePCGame.cpp
+samples_PROGRAMS += ComprehensivePCGameSample
+ComprehensivePCGameSample_CPPFLAGS = $(AM_CPPFLAGS) \
+	-iquote$(top_srcdir)/DependentExtensions/miniupnpc-1.6.20120410
+ComprehensivePCGameSample_SOURCES = \
+	ComprehensivePCGame_CORRECTED/ComprehensivePCGame.cpp
 
 #ComprehensiveTest
 samples_PROGRAMS += ComprehensiveTestSample
