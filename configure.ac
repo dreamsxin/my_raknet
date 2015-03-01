@@ -84,6 +84,9 @@ AS_IF(
 RN_LDFLAGS=
 RN_LIBS=
 
+#for miniupnpc-1.6.20120410
+AC_DEFINE([_GNU_SOURCE])
+
 #c++d std headers
 AX_CXX_HEADER_STDCXX_98
 
@@ -93,7 +96,7 @@ AC_SEARCH_LIBS([pthread_create], [pthread], [RN_LIBS="${RN_LIBS} ${ac_cv_search_
 	
 # Checks for header files.
 AC_FUNC_ALLOCA
-AC_CHECK_HEADERS([arpa/inet.h fcntl.h float.h limits.h malloc.h memory.h netdb.h netinet/in.h stdint.h stdlib.h string.h strings.h sys/ioctl.h sys/socket.h sys/time.h termios.h unistd.h wchar.h])
+AC_CHECK_HEADERS([arpa/inet.h fcntl.h float.h limits.h malloc.h memory.h netdb.h netinet/in.h stdint.h stdlib.h string.h strings.h sys/ioctl.h sys/param.h sys/socket.h sys/time.h termios.h unistd.h wchar.h])
 required_headers=
 AC_CHECK_HEADER([pthread.h],[],[required_headers=${required_headers}" 'pthread' "])
 #
@@ -112,12 +115,15 @@ AC_TYPE_UINT16_T
 AC_TYPE_UINT32_T
 AC_TYPE_UINT64_T
 AC_TYPE_UINT8_T
+AC_TYPE_PID_T
+AC_TYPE_SSIZE_T
 
 # Checks for library functions.
 AC_FUNC_MALLOC
 AC_FUNC_MMAP
 AC_FUNC_REALLOC
-AC_CHECK_FUNCS([atexit gethostbyname gethostname gettimeofday inet_ntoa localtime_r memmove memset mkdir munmap pow select socket sqrt strcasecmp strerror strncasecmp strpbrk strrchr strstr strtoul strtoull])
+AC_FUNC_FORK
+AC_CHECK_FUNCS([atexit gethostbyname gethostname gettimeofday inet_ntoa localtime_r memmove memset mkdir munmap pow select socket sqrt strcasecmp strchr strdup strerror strncasecmp strpbrk strrchr strstr strtoul strtoull])
 
 #----------------------------------------------------------------------------
 # Package configuration switches.
@@ -161,7 +167,9 @@ AC_CONFIG_FILES([
 		Source/Makefile
 		DependentExtensions/Makefile
 		DependentExtensions/cat/Makefile
+		DependentExtensions/Lobby2/Makefile
 		DependentExtensions/miniupnpc-1.6.20120410/Makefile
+		DependentExtensions/RPC3/Makefile
 		Samples/Makefile
 		Samples/Tests/Makefile
 		])
@@ -184,5 +192,19 @@ where the optional <target> is:
 Options:
 -build mode: ${buildtype}
 -build samples: ${build_samples}
--with libcat security: ${libcat_security}
+-with libcat security: ${libcat_security}"
+
+if test "x${build_samples}" != xno ; then
+	echo "
+NOTE: to build as many samples as possible some modifications 
+    has been made to Samples directory (wrt original one):
+    - directory names with spaces have been replaced with
+    others having underscores in place of spaces (this is
+    due to autotools limitation);
+    - source code of some samples has been modified and 
+    for each one a new directory with the '_CORRECTED' 
+    suffix has been added."
+fi
+
+echo "
 -----------------------------------------------------"
