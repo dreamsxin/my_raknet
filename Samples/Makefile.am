@@ -211,15 +211,19 @@ samples_PROGRAMS += ReplicaManager3Sample
 ReplicaManager3Sample_SOURCES = \
 	ReplicaManager3/main.cpp
 
-#RPC3 RPC4
-samples_PROGRAMS += RPC3Sample RPC4Sample
+if HAVE_BOOST
+#RPC3
+samples_PROGRAMS += RPC3Sample
 RPC3Sample_CPPFLAGS = $(AM_CPPFLAGS) \
 	-iquote$(top_srcdir)/DependentExtensions/RPC3
 RPC3Sample_LDADD = $(LDADD) \
 	$(top_builddir)/DependentExtensions/RPC3/librpc3.a
 RPC3Sample_SOURCES = \
 	RPC3/RPC3Sample.cpp
+endif
 
+#RPC4
+samples_PROGRAMS += RPC4Sample
 RPC4Sample_SOURCES = \
 	RPC4/RPC4Sample.cpp
 

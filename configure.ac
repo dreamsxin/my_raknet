@@ -87,6 +87,11 @@ RN_LIBS=
 #c++d std headers
 AX_CXX_HEADER_STDCXX_98
 
+#RPC3 dependent extension: boost libraries
+have_boost=no
+AX_BOOST_BASE([],[have_boost=yes],[])
+AM_CONDITIONAL([HAVE_BOOST],[test "x$have_boost" != xno])
+
 # Checks for libraries.
 required_libraries=
 AC_SEARCH_LIBS([pthread_create], 
@@ -202,6 +207,11 @@ Options:
 -build mode: ${buildtype}
 -build samples: ${build_samples}
 -with libcat security: ${libcat_security}"
+
+if test "x${have_boost}" != xyes ; then
+	echo "
+NOTE: Boost libraries are needed to build 'RPC3' dependent extension."
+fi
 
 if test "x${build_samples}" != xno ; then
 	echo "
