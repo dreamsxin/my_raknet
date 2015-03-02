@@ -35,7 +35,7 @@
 #include "ReadyEvent.h"	
 #include "PacketLogger.h"
 #include "RPC4Plugin.h"
-#include "Kbhit.h"
+//#include "Kbhit.h"
 #include "HTTPConnection2.h"
 // See http://www.digip.org/jansson/doc/2.4/
 // This is used to make it easier to parse the JSON returned from the master server
@@ -115,6 +115,7 @@ void PostRoomToMaster(void);
 // Game contains the list of objects, and serializes if the game is locked, the name of the game, and if it is in gameplay or in the lobby
 // Game is created on startup, rather than over the network, so is replicated as a static object.
 // see Help/replicamanager3.html under the topic Static Objects for more details about how this class is Replicated
+extern class Game *game;
 class Game : public Replica3
 {
 public:
@@ -314,7 +315,7 @@ public:
 		while (iter)
 		{
 			const char *firstKey = json_object_iter_key(iter);
-			if (stricmp(firstKey, "GET")==0)
+			if (strcasecmp(firstKey, "GET")==0)
 			{
 				return json_object_iter_value(iter);
 			}
@@ -694,7 +695,7 @@ RAK_THREAD_DECLARATION(UPNPOpenWorker)
 	if (args->resultCallback)
 		args->resultCallback(success, args->portToOpen, args->userData);
 	RakNet::OP_DELETE(args, _FILE_AND_LINE_);
-	return 1;
+	return (void*)1;
 }
 
 void UPNPOpenAsynch(unsigned short portToOpen,
@@ -1117,7 +1118,8 @@ int main(void)
 					printf("Host sent us system list. Doing NAT punch to each system...\n");
 					DataStructures::List<SystemAddress> addresses;
 					DataStructures::List<RakNetGUID> guids;
-					fullyConnectedMesh2->GetVerifiedJoinRequiredProcessingList(packet->guid, addresses, guids);
+					DataStructures::List<RakNet::BitStream*> streams;
+					fullyConnectedMesh2->GetVerifiedJoinRequiredProcessingList(packet->guid, addresses, guids, streams);
 					for (unsigned int i=0; i < guids.Size(); i++)
 						natPunchthroughClient->OpenNAT(guids[i], game->natPunchServerAddress);
 				}
@@ -1233,7 +1235,7 @@ int main(void)
 						while (iter)
 						{
 							const char *firstKey = json_object_iter_key(iter);
-							if (stricmp(firstKey, "GET")==0)
+							if (strcasecmp(firstKey, "GET")==0)
 							{
 								game->SetMasterServerQueryResult(root);
 								root=0;
@@ -1260,9 +1262,9 @@ int main(void)
 								printf("(S)earch rooms\n");
 								break;
 							}
-							else if (stricmp(firstKey, "POST")==0)
+							else if (strcasecmp(firstKey, "POST")==0)
 							{
-								RakAssert(stricmp(firstKey, "POST")==0);
+								RakAssert(strcasecmp(firstKey, "POST")==0);
 
 								json_t* jsonObject = json_object_iter_value(iter);
 								json_t* val1 = json_object_get(jsonObject, "__rowId");

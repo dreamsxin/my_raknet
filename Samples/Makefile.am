@@ -63,7 +63,11 @@ CommandConsoleServerSample_SOURCES = \
 #ComprehensivePCGame SOURCE_CORRECTED
 samples_PROGRAMS += ComprehensivePCGameSample
 ComprehensivePCGameSample_CPPFLAGS = $(AM_CPPFLAGS) \
-	-iquote$(top_srcdir)/DependentExtensions/miniupnpc-1.6.20120410
+	-iquote$(top_srcdir)/DependentExtensions/miniupnpc-1.6.20120410 \
+	-I$(top_srcdir)/DependentExtensions/jansson-2.4/src
+ComprehensivePCGameSample_LDADD = $(LDADD) \
+	$(top_builddir)/DependentExtensions/jansson-2.4/src/libjansson.a \
+	$(top_builddir)/DependentExtensions/miniupnpc-1.6.20120410/libminiupnpc.a
 ComprehensivePCGameSample_SOURCES = \
 	ComprehensivePCGame_CORRECTED/ComprehensivePCGame.cpp
 
