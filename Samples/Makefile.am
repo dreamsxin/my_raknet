@@ -143,6 +143,15 @@ Lobby2ClientSample_LDADD = $(LDADD) \
 Lobby2ClientSample_SOURCES = \
 	Lobby2Client/Lobby2ClientSample.cpp
 
+#MasterServer2 SOURCE_CORRECTED
+samples_PROGRAMS += MasterServer2Sample
+MasterServer2Sample_CPPFLAGS = $(AM_CPPFLAGS) \
+	-I$(top_srcdir)/DependentExtensions/jansson-2.4/src
+MasterServer2Sample_LDADD = $(LDADD) \
+	$(top_builddir)/DependentExtensions/jansson-2.4/src/libjansson.a
+MasterServer2Sample_SOURCES = \
+	MasterServer2_CORRECTED/main.cpp
+
 #MessageFilter
 samples_PROGRAMS += MessageFilterSample
 MessageFilterSample_SOURCES = \
@@ -190,6 +199,11 @@ PingSample_SOURCES = \
 samples_PROGRAMS += RackspaceConsoleSample
 RackspaceConsoleSample_SOURCES = \
 	RackspaceConsole_CORRECTED/main.cpp
+
+#RakVoice
+#samples_PROGRAMS += RakVoiceSample
+#RakVoiceSample_SOURCES = \
+#	RakVoice/main.cpp
 
 #ReadyEvent
 samples_PROGRAMS += ReadyEventSample
@@ -272,7 +286,7 @@ samples_PROGRAMS += TwoWayAuthenticationSample
 TwoWayAuthenticationSample_SOURCES = \
 	TwoWayAuthentication/TwoWayAuthenticationTest.cpp
 
-#UDPForwarder
-#samples_PROGRAMS += UDPForwarderSample
-#UDPForwarderSample_SOURCES = \
-#	UDPForwarder/main.cpp
+#UDPForwarder SOURCE_CORRECTED
+samples_PROGRAMS += UDPForwarderSample
+UDPForwarderSample_SOURCES = \
+	UDPForwarder_CORRECTED/main.cpp
