@@ -200,11 +200,6 @@ samples_PROGRAMS += RackspaceConsoleSample
 RackspaceConsoleSample_SOURCES = \
 	RackspaceConsole_CORRECTED/main.cpp
 
-#RakVoice
-#samples_PROGRAMS += RakVoiceSample
-#RakVoiceSample_SOURCES = \
-#	RakVoice/main.cpp
-
 #ReadyEvent
 samples_PROGRAMS += ReadyEventSample
 ReadyEventSample_SOURCES = \
