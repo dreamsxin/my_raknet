@@ -7,7 +7,7 @@ LIBS = $(RN_LIBS)
 
 AUTOMAKE_OPTIONS = subdir-objects
 
-#libcat.a: static library
+#libcat.a: convenience static library
 noinst_LIBRARIES = libcat.a
 
 libcat_a_SOURCES = \
