@@ -2,11 +2,14 @@ ACLOCAL_AMFLAGS = -I m4
 
 if BUILD_SAMPLES
 samplesdir = Samples
+IrrlichtDemo_CORRECTED = DependentExtensions/IrrDemo_CORR
 else
 samplesdir =
+IrrlichtDemo_CORRECTED =
 endif 
 
-SUBDIRS = DependentExtensions Source $(samplesdir) DependentExtensions/IrrlichtDemo_CORRECTED
+
+SUBDIRS = DependentExtensions Source $(samplesdir) $(IrrlichtDemo_CORRECTED) 
 
 #Help docs
 helppkg = Help-$(PACKAGE_VERSION).tar.gz

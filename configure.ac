@@ -180,7 +180,7 @@ AC_CONFIG_FILES([
 		Source/Makefile
 		DependentExtensions/Makefile
 		DependentExtensions/cat/Makefile
-		DependentExtensions/IrrlichtDemo_CORRECTED/Makefile
+		DependentExtensions/IrrDemo_CORR/Makefile
 		DependentExtensions/jansson-2.4/src/Makefile
 		DependentExtensions/Lobby2/Makefile
 		DependentExtensions/miniupnpc-1.5/Makefile
@@ -224,7 +224,12 @@ NOTE: to build as many samples as possible some modifications
     due to autotools limitation);
     - source code of some samples has been modified and 
     for each one a new directory with the '_CORRECTED' 
-    suffix has been added."
+    suffix has been added.
+NOTE: IrrlichtDemo directory (under DependendExtensions) has 
+    been replaced with IrrDemo_CORR, because to source code
+    has been modified.
+    The demo must be run from within the directory:
+     ${prefix}/share/raknet/Samples/Irrlicht"
 fi
 
 echo "

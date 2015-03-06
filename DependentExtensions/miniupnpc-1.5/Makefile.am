@@ -1,41 +1,45 @@
-AM_CPPFLAGS = -I$(srcdir) -I$(top_srcdir)/Source \
-	-I/usr/include/python2.7 $(RN_CPPFLAGS) 
+AM_CPPFLAGS = -iquote$(top_srcdir)/Source $(RN_CPPFLAGS) 
 AM_CXXFLAGS = $(RN_CXXFLAGS)
-AM_LDFLAGS = 
+AM_CFLAGS = $(RN_CXXFLAGS)
+AM_LDFLAGS = $(RN_LDFLAGS)
 
-#libcat.a: static library
-noinst_LIBRARIES = libminiupnpc.a
+LIBS = $(RN_LIBS)
 
-libminiupnpc_a_SOURCES = \
-	bsdqueue.h \
-	codelength.h \
+AUTOMAKE_OPTIONS = subdir-objects
+
+#libminiupnpc1.5.a: static library
+lib_LIBRARIES = libminiupnpc1.5.a
+
+libminiupnpc1_5_a_SOURCES = \
 	connecthostport.c \
-	connecthostport.h \
-	declspec.h \
 	igd_desc_parse.c \
-	igd_desc_parse.h \
 	minisoap.c \
-	minisoap.h \
 	minissdpc.c \
-	minissdpc.h \
 	miniupnpc.c \
-	miniupnpc.h \
-	miniupnpcmodule.c \
-	miniupnpcstrings.h.in \
 	miniwget.c \
-	miniwget.h \
 	minixml.c \
-	minixml.h \
 	minixmlvalid.c \
-	testigddescparse.c \
-	testminiwget.c \
-	testminixml.c \
-	testupnpreplyparse.c \
 	upnpc.c \
 	upnpcommands.c \
-	upnpcommands.h \
 	upnperrors.c \
+	upnpreplyparse.c
+
+miniupnpc15headersdir = $(pkgincludedir)/miniupnpc1.5
+miniupnpc15headers_HEADERS = \
+	bsdqueue.h \
+	codelength.h \
+	connecthostport.h \
+	declspec.h \
+	igd_desc_parse.h \
+	minisoap.h \
+	minissdpc.h \
+	miniupnpc.h \
+	miniwget.h \
+	minixml.h \
+	miniupnpcstrings.h.in \
+	upnpcommands.h \
 	upnperrors.h \
-	upnpreplyparse.c \
 	upnpreplyparse.h
 
+
+	
