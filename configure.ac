@@ -180,7 +180,7 @@ AC_CONFIG_FILES([
 		Source/Makefile
 		DependentExtensions/Makefile
 		DependentExtensions/cat/Makefile
-		DependentExtensions/IrrlichtDemo/Makefile
+		DependentExtensions/IrrlichtDemo_CORRECTED/Makefile
 		DependentExtensions/jansson-2.4/src/Makefile
 		DependentExtensions/Lobby2/Makefile
 		DependentExtensions/miniupnpc-1.5/Makefile
