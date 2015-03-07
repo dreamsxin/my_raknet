@@ -167,8 +167,20 @@ AM_CONDITIONAL([BUILD_SAMPLES],[test "x$build_samples" == xyes])
 AC_ARG_WITH([libcat],
 	[AS_HELP_STRING([--with-libcat],
 		[@<:@=yes@:>@ with libcat security (default NO)])],
-    [libcat_security=yes
-    AC_DEFINE([LIBCAT_SECURITY],[1])],
+    [libcat_security=${withval}
+    if test "x${libcat_security}" != xno ; then
+    	libcat_security=yes
+		# Checks libraries for samples.
+		required_libraries=
+		# Checks header files for samples.
+		required_headers=
+		# Checks for typedefs, structures, and compiler characteristics.
+		# Checks for library functions.
+		#
+		STOP_ON_CHECKS_ERR([$required_libraries],[$required_headers],['libRocket' sample programs])
+		AC_DEFINE([LIBCAT_SECURITY],[1])
+	fi
+	],
     [libcat_security=no])
 AM_CONDITIONAL([RN_LIBCATSECURITY], [test "x${libcat_security}" == xyes])
 
